@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Bot, MessageSquare, Send, X, Sparkles, Lightbulb, User } from "lucide-react"
+import { Bot, MessageSquare, Send, X, Sparkles, Lightbulb } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useLanguage } from "@/components/language-provider"
 import { cn } from "@/lib/utils" // Giả sử bạn có hàm tiện ích này từ shadcn/ui
@@ -15,42 +15,52 @@ interface Message {
   content: string
 }
 
-// --- Dữ liệu Mockup ---
+// --- DỮ LIỆU MOCKUP MỚI - DỰA TRÊN CV CỦA ĐẶNG ANH NHẬT ---
 const mockResponses = {
   vn: {
-    "kỹ năng của nhật là gì?":
-      "Nhật có nhiều kỹ năng lắm! Anh ấy mạnh về React, Next.js, TypeScript để xây dựng giao diện người dùng hiện đại, và cũng rành về Node.js, Express cho backend. Ngoài ra, Nhật còn có kinh nghiệm với các công cụ như Docker, Vercel và các hệ quản trị cơ sở dữ liệu như PostgreSQL.",
-    "anh ấy có kinh nghiệm làm việc ở đâu?":
-      "Nhật đã có kinh nghiệm làm việc tại một số công ty công nghệ, nơi anh ấy tham gia phát triển các ứng dụng web quy mô lớn, từ thương mại điện tử đến các hệ thống quản lý nội bộ. Bạn có muốn biết chi tiết hơn về dự án nào không?",
-    "mục tiêu nghề nghiệp của nhật là gì?":
-      "Mục tiêu của Nhật là trở thành một Lập trình viên Full-stack chuyên sâu, có khả năng xây dựng các sản phẩm công nghệ hoàn chỉnh và mang lại giá trị thực cho người dùng. Anh ấy luôn muốn học hỏi công nghệ mới và đóng góp cho các dự án có ý nghĩa.",
-    "anh ấy đã đạt được giải thưởng nào?":
-      "Trong quá trình học tập và làm việc, Nhật đã giành được một số giải thưởng tại các cuộc thi lập trình (hackathon) và được công nhận là nhân viên xuất sắc của quý. Điều này cho thấy sự nỗ lực và đam mê của anh ấy với ngành lập trình.",
     "giới thiệu về đặng anh nhật":
-      "Đặng Anh Nhật là một lập trình viên đam mê và sáng tạo, luôn tìm kiếm cơ hội để giải quyết các vấn đề phức tạp bằng công nghệ. Anh ấy tin rằng một sản phẩm tốt không chỉ cần chạy đúng mà còn phải mang lại trải nghiệm tuyệt vời cho người dùng. Ngoài code ra, Nhật còn thích đọc sách và chơi game để giải trí!",
-    default: "Cảm ơn câu hỏi của bạn! Đây là một chủ đề thú vị. Mặc dù tôi chưa được lập trình để trả lời câu này, bạn có thể liên hệ trực tiếp với Nhật qua email hoặc LinkedIn để trao đổi thêm nhé.",
+      "Đặng Anh Nhật là một cá nhân năng động, sáng tạo và đầy nhiệt huyết trong lĩnh vực Marketing - Truyền thông. Anh ấy luôn mong muốn được cống hiến sức trẻ và học hỏi để hoàn thiện kỹ năng, tìm kiếm cơ hội phát triển sự nghiệp.",
+    "kỹ năng của nhật là gì?":
+      "Nhật có nhiều kỹ năng đa dạng, bao gồm:\n- **Video & Sáng tạo:** Edit video (CapCut, Premiere, After Effect), kỹ năng lập kế hoạch và viết bài truyền thông, sáng tạo content.\n- **Kỹ năng mềm:** Lãnh đạo đội nhóm, xử lý khủng hoảng truyền thông, và sẵn sàng học hỏi, thích nghi nhanh.\n- **Công cụ:** Sử dụng tốt Word, Excel, PowerPoint và ứng dụng AI vào công việc.",
+    "anh ấy có kinh nghiệm làm việc ở đâu?":
+      "Nhật đã có kinh nghiệm thực tế tại nhiều vị trí:\n- **Nexus Media (CTV Marketing):** Edit video, lập kế hoạch và thực thi truyền thông, quản trị fanpage.\n- **Văn Lang TV (CTV):** Biên tập, đạo diễn, quay & dựng nhiều series video.\n- **Jollibee Vietnam (Crew Leader):** Quản lý nhân sự và kiểm soát hàng hóa.",
+    "anh ấy đã đạt được giải thưởng nào?":
+      "Nhật đã giành được nhiều giải thưởng ấn tượng, nổi bật là:\n- Giải Nhất 'Môn điền kinh - Hội thao SV' 2025.\n- Giải Nhất 'PR Run' 2024.\n- Giải 'Quay phim xuất sắc nhất' từ Văn Lang TV.\n- Đạt học bổng và là sinh viên giỏi năm 2023.",
+    "nhật học ở đâu?":
+      "Nhật đã tốt nghiệp Trung cấp Nghiệp vụ nhà hàng tại Cao đẳng Hoà Bình Xuân Lộc (GPA 8.0/10) và hiện đang theo học ngành Truyền thông đa phương tiện tại Đại học Văn Lang (GPA 8.1/10).",
+    "nhật có tham gia tình nguyện không?":
+       "Có chứ! Nhật rất tích cực tham gia các hoạt động cộng đồng. Anh ấy đã đảm nhận vai trò Trưởng nhóm Tình nguyện viên và hỗ trợ tại nhiều giải marathon lớn như VPBank Vnexpress Marathon, HCMC Marathon, và Danang International Marathon.",
+    "mục tiêu nghề nghiệp của nhật là gì?":
+      "Mục tiêu của Nhật rất rõ ràng:\n- **Ngắn hạn:** Nhanh chóng thích nghi, nâng cao kỹ năng dựng video và đóng góp hiệu quả vào các dự án của công ty.\n- **Dài hạn:** Trở thành nhân sự chủ lực trong team Marketing và phát triển tư duy kể chuyện bằng hình ảnh.",
+    default: "Cảm ơn câu hỏi của bạn! Đây là một chủ đề thú vị. Để có câu trả lời chi tiết nhất, bạn có thể liên hệ trực tiếp với Nhật qua email nhatngocdong123@gmail.com nhé.",
   },
   en: {
-    "what are nhat's skills?":
-      "Nhat has a wide range of skills! He's proficient in front-end technologies like React, Next.js, and TypeScript for building modern user interfaces, and also skilled in back-end with Node.js and Express. Additionally, he has experience with tools like Docker, Vercel, and databases like PostgreSQL.",
-    "where has he worked?":
-      "Nhat has worked at several tech companies where he contributed to developing large-scale web applications, from e-commerce platforms to internal management systems. Would you like to know more about a specific project?",
-    "what are nhat's career goals?":
-      "Nhat aims to become a senior Full-stack Developer, capable of building complete tech products that deliver real value to users. He is always eager to learn new technologies and contribute to meaningful projects.",
-    "what awards has he received?":
-      "Throughout his academic and professional journey, Nhat has won several awards at programming competitions (hackathons) and was recognized as an employee of the quarter. This demonstrates his dedication and passion for the programming field.",
     "tell me about dang anh nhat":
-      "Dang Anh Nhat is a passionate and creative developer, always seeking opportunities to solve complex problems with technology. He believes a great product not only needs to function correctly but also provide an amazing user experience. Besides coding, Nhat enjoys reading and gaming!",
-    default: "That's an excellent question! While I'm not programmed to answer that specifically, you can connect directly with Nhat via email or LinkedIn to discuss it further.",
+      "Dang Anh Nhat is a dynamic, creative, and enthusiastic individual in the Marketing and Communications field. He is always eager to contribute his youthful energy and learn new things to perfect his skills and advance his career.",
+    "what are nhat's skills?":
+      "Nhat has a diverse skill set, including:\n- **Video & Creativity:** Video editing (CapCut, Premiere, After Effects), planning and writing for communications, and content creation.\n- **Soft Skills:** Team leadership, crisis communication management, and a strong willingness to learn and adapt quickly.\n- **Tools:** Proficient in Word, Excel, PowerPoint, and applying AI in the workplace.",
+    "where has he worked?":
+      "Nhat has gained practical experience in several roles:\n- **Nexus Media (Marketing Contributor):** Edited videos, planned and executed communication strategies, and managed fan pages.\n- **Van Lang TV (Contributor):** Edited, directed, and filmed various video series.\n- **Jollibee Vietnam (Crew Leader):** Managed personnel and controlled inventory.",
+    "what awards has he received?":
+      "Nhat has won several impressive awards, notably:\n- First Place in 'Athletics - Student Sports Festival' 2025.\n- First Place in 'PR Run' 2024.\n- 'Best Cinematographer' award from Van Lang TV.\n- He has also earned scholarships and was recognized as an excellent student in 2023.",
+    "what is his educational background?":
+      "Nhat graduated with a vocational degree in Restaurant Operations from Hoa Binh Xuan Loc College (GPA 8.0/10) and is currently studying Multimedia Communications at Van Lang University (GPA 8.1/10).",
+    "does he have any volunteer experience?":
+       "Yes, he does! Nhat is very active in community events. He has served as a Volunteer Leader and event crew member at major marathons like the VPBank Vnexpress Marathon, HCMC Marathon, and Danang International Marathon.",
+    "what are nhat's career goals?":
+      "Nhat's goals are very clear:\n- **Short-term:** To quickly adapt to the work environment, enhance his video editing skills, and contribute effectively to the company's projects.\n- **Long-term:** To become a key member of the Marketing team and develop his visual storytelling mindset.",
+    default: "Thank you for your question! That's an interesting topic. for the most detailed answer, you can contact Nhat directly via email at nhatngocdong123@gmail.com.",
   },
 }
 
 const getMockResponse = (question: string, lang: "vn" | "en"): string => {
-  const normalizedQuestion = question.toLowerCase().replace("?", "").trim()
+  const normalizedQuestion = question.toLowerCase().replace(/[?.,]/g, "").trim()
   const responses = mockResponses[lang]
-  return responses[normalizedQuestion as keyof typeof responses] || responses.default
+  // Tìm key khớp nhất
+  const bestMatch = Object.keys(responses).find(key => normalizedQuestion.includes(key) || key.includes(normalizedQuestion));
+  return responses[bestMatch as keyof typeof responses] || responses.default
 }
-// --- Kết thúc dữ liệu Mockup ---
+// --- KẾT THÚC DỮ LIỆU MOCKUP ---
 
 export function Chatbot() {
   const [isOpen, setIsOpen] = useState(false)
@@ -58,12 +68,12 @@ export function Chatbot() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const { language, currentContent } = useLanguage()
+  const { language } = useLanguage()
 
   const initialGreeting =
     language === "vn"
-      ? "Chào bạn! Tôi là trợ lý AI của Đặng Anh Nhật. Tôi có thể giúp gì cho bạn?"
-      : "Hi there! I'm Dang Anh Nhat's AI assistant. How can I help you today?"
+      ? "Chào bạn! Tôi là trợ lý AI của Đặng Anh Nhật. Bạn muốn tìm hiểu về kinh nghiệm Marketing của anh ấy chứ?"
+      : "Hi there! I'm Dang Anh Nhat's AI assistant. Curious about his Marketing experience?"
 
   const suggestedQuestions =
     language === "vn"
@@ -81,7 +91,6 @@ export function Chatbot() {
   }, [isOpen, messages.length, initialGreeting])
 
   useEffect(() => {
-    // Tự động cuộn xuống tin nhắn mới nhất
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTo({
         top: scrollAreaRef.current.scrollHeight,
@@ -100,14 +109,13 @@ export function Chatbot() {
     setInput("")
     setIsLoading(true)
 
-    // Giả lập bot đang "gõ"
     setTimeout(() => {
       const botResponseContent = getMockResponse(messageContent, language)
       const botMessage: Message = { role: "assistant", content: botResponseContent }
 
       setMessages((prev) => [...prev, botMessage])
       setIsLoading(false)
-    }, 1500 + Math.random() * 500) // Thời gian chờ ngẫu nhiên cho thực tế
+    }, 1200 + Math.random() * 500)
   }
 
   return (
@@ -171,7 +179,7 @@ export function Chatbot() {
               
               <CardContent className="flex-1 p-0 overflow-hidden">
                 <ScrollArea className="h-full" ref={scrollAreaRef}>
-                  <div className="space-y-4 p-4">
+                  <div className="space-y-6 p-4 whitespace-pre-line">
                     {messages.map((msg, index) => (
                       <motion.div
                         key={index}
